@@ -1,0 +1,3132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="G48xKZ_EVRZWthQr_imFoe91QE6AmQfzlT5j_ttSHVg" />
+<title id="pageTitle">RR Repack</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="manifest" id="manifestLink" href="">
+<meta name="theme-color" content="#0b0b0d">
+<style>
+/* ============================================================
+   RR REPACK — PREMIUM AAA GAMING DESIGN SYSTEM
+   Design tokens → Global → Header → Hero → Cards → Details →
+   Admin layout → Dashboard → Tables → Forms → Modals → Toasts →
+   Responsive
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ---------- 1. Design tokens ---------- */
+:root {
+  --bg: #0b0b0d;
+  --bg-elevated: #121315;
+  --card: #131417;
+  --card-hover: #17181c;
+  --primary: #168cff;
+  --primary-2: #00bfff;
+  --primary-glow: rgba(22, 140, 255, 0.28);
+  --secondary: #4fd1ff;
+  --secondary-glow: rgba(79, 209, 255, 0.22);
+  --accent: #ffb020;
+  --text: #f5f7fa;
+  --muted: #a1a7b0;
+  --faint: #6d737c;
+  --border: #22262c;
+  --success: #2ee6a8;
+  --danger: #ff5470;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font-display: 'Manrope', 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Inter', sans-serif;
+  --clip: none;
+  --clip-sm: none;
+  --ease: cubic-bezier(.4,0,.2,1);
+}
+
+/* ---------- Light theme override ---------- */
+html[data-theme="light"] {
+  --bg: #f4f6f9;
+  --bg-elevated: #ffffff;
+  --card: #ffffff;
+  --card-hover: #f0f3f7;
+  --text: #14161a;
+  --muted: #565d68;
+  --faint: #7b828c;
+  --border: #e1e5ea;
+}
+
+/* ---------- Theme toggle button ---------- */
+.theme-toggle-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  color: var(--text); cursor: pointer; margin-left: 8px; flex-shrink: 0;
+  transition: background .2s var(--ease), transform .2s var(--ease);
+}
+.theme-toggle-btn:hover { transform: translateY(-1px); background: var(--card-hover); }
+
+/* ---------- Fade-in transition ---------- */
+.fade-in { animation: fadeInUp .35s var(--ease) both; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ---------- Breadcrumbs ---------- */
+.breadcrumbs { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .85rem; color: var(--muted); margin-bottom: 16px; }
+.breadcrumbs a { color: var(--muted); text-decoration: none; }
+.breadcrumbs a:hover { color: var(--primary); }
+.breadcrumbs .sep { color: var(--faint); }
+.breadcrumbs .current { color: var(--text); }
+
+/* ---------- Star ratings ---------- */
+.star-rating { display: inline-flex; gap: 2px; }
+.star-rating .star { font-size: 1.1rem; color: var(--faint); cursor: default; }
+.star-rating .star.filled { color: var(--accent); }
+.star-rating.interactive .star { cursor: pointer; transition: transform .1s var(--ease); }
+.star-rating.interactive .star:hover { transform: scale(1.15); }
+.rating-summary { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.rating-summary .avg { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; }
+.review-item { border-bottom: 1px solid var(--border); padding: 14px 0; }
+.review-item:last-child { border-bottom: none; }
+.review-item .review-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 4px; }
+.review-item .review-name { font-weight: 700; }
+.review-item .review-date { color: var(--faint); font-size: .78rem; }
+.review-item .review-text { color: var(--muted); font-size: .92rem; }
+.review-form-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+
+/* ---------- Download counter on card ---------- */
+.game-card-downloads { display: inline-flex; align-items: center; gap: 4px; color: var(--faint); font-size: .78rem; }
+
+/* ---------- Report / request forms ---------- */
+.inline-form-panel { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 14px; }
+
+/* ---------- Badges: scheduled ---------- */
+.badge.scheduled { background: rgba(255,176,32,.15); color: var(--accent); }
+.badge.published { background: rgba(46,230,168,.15); color: var(--success); }
+
+/* ---------- Admin small helpers ---------- */
+.admin-subnote { color: var(--muted); font-size: .82rem; margin: 6px 0 14px; }
+.activity-item { border-bottom: 1px solid var(--border); padding: 10px 0; font-size: .88rem; }
+.activity-item .act-time { color: var(--faint); font-size: .76rem; }
+
+/* ---------- 2. Global ---------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+::selection { background: var(--primary); color: #fff; }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+body::before, body::after { content: none; }
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Pricing / access-type additions ---------- */
+.access-type-options { display: flex; flex-wrap: wrap; gap: 10px; }
+.radio-pill {
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  border-radius: 100px;
+  padding: 9px 16px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 200ms var(--ease);
+}
+.radio-pill:has(input:checked) { color: var(--text); border-color: var(--primary); background: rgba(22,140,255,0.1); }
+.radio-pill input { accent-color: var(--primary); }
+
+.game-card-badges, .details-badges {
+  position: absolute; top: 12px; left: 12px;
+  display: flex; flex-wrap: wrap; gap: 6px; z-index: 2;
+}
+.details-badges { position: static; margin-bottom: 12px; }
+.price-badge {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 6px;
+  color: #051018;
+  backdrop-filter: blur(6px);
+}
+.price-badge.free { background: var(--success); }
+.price-badge.sale { background: var(--primary); color: #fff; }
+.price-badge.new { background: var(--accent); }
+.price-badge.coming-soon { background: rgba(20,21,24,0.85); color: var(--text); border: 1px solid var(--border); }
+.price-badge.featured { background: var(--primary-2); color: #051018; }
+.price-badge.trending { background: var(--secondary); color: #051018; }
+.price-badge.hot-deal { background: var(--danger); color: #fff; }
+
+.game-card-price { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-family: var(--font-body); }
+.game-card-price .original { color: var(--faint); text-decoration: line-through; font-size: 0.85rem; }
+.game-card-price .current { color: var(--text); font-weight: 700; font-size: 1.05rem; }
+.game-card-price .off { color: var(--success); font-size: 0.78rem; font-weight: 600; }
+.game-card { position: relative; }
+
+/* ---------- 3. Header ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background:
+    linear-gradient(180deg, rgba(11,11,13,0.9), rgba(11,11,13,0.86)),
+    url('tab.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: -0.2px;
+  color: var(--text);
+}
+.logo span { color: var(--primary-2); }
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.nav-links a {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.92rem;
+  color: var(--muted);
+  transition: color 180ms var(--ease);
+  position: relative;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+}
+.nav-links a::before { content: none; }
+.nav-links a:hover { color: var(--text); background: var(--card-hover); }
+.nav-links a.active { color: var(--text); }
+.nav-links a.active::after {
+  content: "";
+  position: absolute;
+  left: 16px; right: 16px; bottom: 4px;
+  height: 2px;
+  background: var(--primary-2);
+  border-radius: 2px;
+}
+.nav-links a.admin-link {
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 18px;
+  margin-left: 8px;
+  background: var(--card);
+}
+.nav-links a.admin-link:hover {
+  border-color: var(--primary);
+  color: var(--primary-2);
+  background: rgba(22,140,255,0.08);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+.hamburger span {
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 200ms var(--ease);
+}
+
+/* ---------- 4. Hero ---------- */
+.hero {
+  padding: 96px 0 56px;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(11,11,13,0.96) 0%, rgba(11,11,13,0.75) 45%, rgba(11,11,13,0.35) 100%),
+    linear-gradient(0deg, var(--bg) 0%, rgba(11,11,13,0.2) 30%, rgba(11,11,13,0.2) 70%, var(--bg) 100%),
+    url('bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+  line-height: 1.08;
+}
+.hero h1 span {
+  color: var(--primary-2);
+  position: relative;
+  display: inline-block;
+}
+.hero h1 span::before { content: none; }
+
+.hero p {
+  color: var(--muted);
+  font-size: 1.08rem;
+  margin-bottom: 32px;
+  max-width: 560px;
+  font-family: var(--font-body);
+}
+.hero p::before { content: none; }
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  max-width: 480px;
+  transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+.search-bar:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(22,140,255,0.14);
+}
+.search-bar svg { flex-shrink: 0; color: var(--muted); }
+.search-bar input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 0.96rem;
+  width: 100%;
+  font-family: var(--font-body);
+}
+.search-bar input::placeholder { color: var(--faint); }
+
+/* ---------- Hero stats + CTAs ---------- */
+.hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin: 22px 0 36px; }
+.hero-stats { display: flex; gap: 28px; flex-wrap: wrap; }
+.hero-stat { display: flex; flex-direction: column; gap: 2px; }
+.hero-stat .hs-value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+.hero-stat .hs-label {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- Section title ---------- */
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.3px;
+  margin: 12px 0 24px;
+  position: relative;
+  z-index: 1;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-title::before, .section-title::after { content: none; }
+
+/* ---------- Horizontal rows (Featured / Trending / New) ---------- */
+.row-section { padding: 8px 0 44px; position: relative; z-index: 1; }
+.row-scroll {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+.row-scroll::-webkit-scrollbar { height: 8px; }
+.row-scroll .game-card {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+}
+.row-scroll.featured-row .game-card { flex-basis: 300px; }
+@media (max-width: 520px) {
+  .row-scroll .game-card { flex-basis: 66vw; }
+  .row-scroll.featured-row .game-card { flex-basis: 82vw; }
+}
+.section-sub {
+  color: var(--faint);
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  margin: -14px 0 20px;
+}
+.badge-emoji { margin-right: 6px; }
+
+/* ---------- 5. Game Grid / Cards ---------- */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  padding-bottom: 80px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 1080px) { .game-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 800px) { .game-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .game-grid { grid-template-columns: 1fr; } }
+
+.games-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.games-toolbar .section-title { margin-bottom: 0; }
+.toolbar-right { display: flex; align-items: center; gap: 14px; }
+.results-count { font-family: var(--font-body); font-size: 13px; color: var(--faint); }
+#sortSelect {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  outline: none;
+  cursor: pointer;
+}
+#sortSelect:focus-visible { border-color: var(--primary); }
+
+.game-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 220ms var(--ease), border-color 220ms var(--ease), box-shadow 220ms var(--ease);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.game-card::after { content: none; }
+.game-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(22,140,255,0.5);
+  box-shadow: 0 16px 32px -18px rgba(0,0,0,0.6), 0 0 0 1px rgba(22,140,255,0.15);
+}
+
+.game-card .thumb-wrap {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  position: relative;
+}
+.game-card .thumb-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11,11,13,0) 55%, rgba(11,11,13,0.92) 100%);
+  z-index: 1;
+}
+.game-card .thumb-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms var(--ease);
+}
+.game-card:hover .thumb-wrap img { transform: scale(1.04); }
+
+.game-card-body { padding: 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+
+.game-card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.1px;
+}
+
+.game-card-size {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: var(--muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 10px;
+  width: fit-content;
+}
+
+.game-card-desc {
+  color: var(--muted);
+  font-size: 0.85rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  flex: 1;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  font-size: 0.88rem;
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: transform 150ms var(--ease), box-shadow 150ms var(--ease), background 180ms var(--ease), color 180ms var(--ease), border-color 180ms var(--ease);
+  position: relative;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+}
+.btn-primary:hover { box-shadow: 0 8px 20px -8px var(--primary-glow); transform: translateY(-1px); filter: brightness(1.08); }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-outline:hover { border-color: var(--primary); color: var(--primary-2); background: rgba(22,140,255,0.06); }
+.btn-block { width: 100%; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { filter: brightness(1.1); }
+.btn-sm { padding: 8px 14px; font-size: 0.78rem; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--muted);
+  grid-column: 1 / -1;
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-body);
+}
+.empty-state svg { margin-bottom: 16px; opacity: 0.5; color: var(--primary-2); }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--card) 25%, var(--card-hover) 37%, var(--card) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+@keyframes skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+.skeleton-card { height: 320px; }
+
+/* ---------- 6. Game Details Page ---------- */
+.game-details {
+  padding: 44px 0 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.details-hero {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+@media (max-width: 760px) { .details-hero { grid-template-columns: 1fr; } }
+
+.details-thumb {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  aspect-ratio: 3/4;
+  background: var(--bg-elevated);
+  box-shadow: 0 24px 50px -30px rgba(0,0,0,0.7);
+}
+.details-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.details-info h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  margin-bottom: 12px;
+}
+
+.details-meta { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+.meta-pill {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 12px;
+}
+
+.details-about { color: var(--muted); font-size: 0.98rem; max-width: 620px; }
+
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.panel h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.2px;
+  margin-bottom: 20px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel h2::before { content: none; }
+
+.req-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+@media (max-width: 640px) { .req-grid { grid-template-columns: 1fr; } }
+.req-col h3 {
+  font-family: var(--font-display);
+  color: var(--primary-2);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.req-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+}
+.req-row:last-child { border-bottom: none; }
+.req-row span:first-child { color: var(--faint); }
+.req-row span:last-child { text-align: right; color: var(--text); }
+
+/* Product key entry */
+.key-entry { display: flex; gap: 12px; flex-wrap: wrap; }
+.key-entry input {
+  flex: 1;
+  min-width: 220px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: var(--font-body);
+  letter-spacing: 1px;
+  outline: none;
+  transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+.key-entry input::placeholder { color: var(--faint); letter-spacing: 0.5px; }
+.key-entry input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(22,140,255,0.14); }
+
+.key-status {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  display: none;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid transparent;
+}
+.key-status.show { display: flex; }
+.key-status.success { background: rgba(46, 230, 168, 0.08); color: var(--success); border-color: rgba(46,230,168,0.3); }
+.key-status.error { background: rgba(255, 84, 112, 0.08); color: var(--danger); border-color: rgba(255,84,112,0.3); }
+
+.download-list { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.download-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  flex-wrap: wrap;
+  transition: border-color 200ms var(--ease);
+}
+.download-item:hover { border-color: rgba(22,140,255,0.4); }
+.download-item .dl-name { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.1px; }
+.download-item .dl-size { color: var(--muted); font-size: 0.85rem; font-family: var(--font-body); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 36px 0;
+  text-align: center;
+  color: var(--faint);
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Toasts ---------- */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+.toast {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  min-width: 260px;
+  max-width: 340px;
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  box-shadow: 0 16px 36px -12px rgba(0,0,0,0.6);
+  animation: toast-in 220ms var(--ease);
+}
+.toast.error { border-left-color: var(--danger); }
+.toast.success { border-left-color: var(--success); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------- Mobile Nav ---------- */
+@media (max-width: 820px) {
+  .hamburger { display: flex; }
+  .nav-links {
+    position: fixed;
+    top: 68px;
+    left: 0;
+    right: 0;
+    background: rgba(11,11,13,0.98);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 24px;
+    gap: 4px;
+    transform: translateY(-130%);
+    transition: transform 220ms var(--ease);
+    z-index: 90;
+  }
+  .nav-links.open { transform: translateY(0); }
+}
+
+/* ============================================================
+   RR REPACK — ADMIN STYLESHEET
+   ============================================================ */
+
+.admin-login-wrap {
+  min-height: calc(100vh - 145px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  padding: 24px;
+  background:
+    linear-gradient(180deg, rgba(11,11,13,0.88), rgba(11,11,13,0.92)),
+    url('adminbg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.admin-login-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 30px 60px -30px rgba(0,0,0,0.7);
+}
+.admin-login-card .lock-icon {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: rgba(22,140,255,0.1);
+  color: var(--primary-2);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+}
+.admin-login-card h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+}
+.admin-login-card p { color: var(--muted); font-size: 0.88rem; margin-bottom: 24px; }
+
+.form-group { margin-bottom: 16px; text-align: left; }
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color 180ms var(--ease), box-shadow 180ms var(--ease);
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(22,140,255,0.14); }
+.form-group textarea { resize: vertical; min-height: 90px; }
+.form-error {
+  color: var(--danger);
+  font-size: 0.78rem;
+  margin-top: 5px;
+  display: none;
+}
+.form-error.show { display: block; }
+.form-group input.invalid, .form-group textarea.invalid { border-color: var(--danger); }
+
+/* ---------- Admin Shell ---------- */
+.admin-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: calc(100vh - 68px);
+}
+@media (max-width: 860px) { .admin-shell { grid-template-columns: 1fr; } }
+
+.admin-sidebar {
+  background: #0d0e10;
+  border-right: 1px solid var(--border);
+  padding: 24px 14px;
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 860px) {
+  .admin-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 12px 16px;
+  }
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 180ms var(--ease), color 180ms var(--ease);
+  white-space: nowrap;
+  border-left: 2px solid transparent;
+}
+.admin-nav-item:hover { background: var(--card-hover); color: var(--text); }
+.admin-nav-item.active { background: rgba(22,140,255,0.1); color: var(--primary-2); border-left: 2px solid var(--primary); }
+
+.admin-main {
+  padding: 32px;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+@media (max-width: 640px) { .admin-main { padding: 20px; } }
+
+.admin-view { display: none; }
+.admin-view.active { display: block; }
+
+.admin-page-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.3px;
+  margin-bottom: 24px;
+}
+
+/* Stat cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 32px;
+}
+@media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr; } }
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  transition: border-color 180ms var(--ease);
+}
+.stat-card .stat-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  margin-bottom: 10px;
+}
+.stat-card .stat-value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.stat-card.accent .stat-value { color: var(--primary-2); }
+.stat-card:hover { border-color: rgba(22,140,255,0.4); }
+
+/* Tables */
+.table-wrap {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+table { width: 100%; border-collapse: collapse; min-width: 560px; }
+th, td {
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+th {
+  font-family: var(--font-body);
+  color: var(--faint);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+}
+tr:last-child td { border-bottom: none; }
+tr { transition: background 150ms var(--ease); }
+tbody tr:hover { background: var(--card-hover); }
+td.actions { display: flex; gap: 8px; }
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+.badge.unused { background: rgba(46,230,168,0.1); color: var(--success); border: 1px solid rgba(46,230,168,0.3); }
+.badge.used { background: rgba(255,84,112,0.1); color: var(--danger); border: 1px solid rgba(255,84,112,0.3); }
+.badge.expired { background: rgba(161,167,176,0.12); color: var(--muted); border: 1px solid rgba(161,167,176,0.3); }
+
+.admin-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Download parts + key builder */
+.dynamic-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+.dynamic-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 1.4fr auto;
+  gap: 10px;
+  align-items: center;
+}
+@media (max-width: 700px) { .dynamic-row { grid-template-columns: 1fr; } }
+.dynamic-row input {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 0.86rem;
+  outline: none;
+}
+.dynamic-row input:focus { border-color: var(--primary); }
+.remove-row-btn {
+  background: rgba(255,84,112,0.12);
+  color: var(--danger);
+  border: none;
+  border-radius: var(--radius-sm);
+  width: 36px; height: 36px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.keys-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (max-width: 640px) { .keys-grid { grid-template-columns: 1fr; } }
+
+.form-section {
+  margin-bottom: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.form-section h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.1px;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .form-row-2 { grid-template-columns: 1fr; } }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 60px -24px rgba(0,0,0,0.8);
+}
+.modal-box h3 { font-family: var(--font-display); font-weight: 700; margin-bottom: 10px; }
+.modal-box p { color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
+.modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="#/" class="logo" id="logoLink">RR <span>Repack</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#/" class="nav-home">Home</a>
+      <a href="#/#games" class="nav-games">Games</a>
+      <a href="#/admin-login" class="admin-link nav-admin">Admin</a>
+      <a href="#/" class="nav-view-site" style="display:none;">View Site</a>
+      <span class="nav-logout" id="logoutBtn" style="display:none; cursor:pointer;">Logout</span>
+      <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle theme" aria-label="Toggle light/dark theme">🌙</button>
+    </nav>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ================= HOME PAGE ================= -->
+<main id="page-home">
+  <section class="hero container">
+    <h1>Your Next Adventure<br><span data-text="Starts Here">Starts Here</span></h1>
+    <p>Discover games. Verify your key. Download and play.</p>
+    <div class="search-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search games...">
+    </div>
+    <div class="hero-ctas">
+      <a href="#/#games" class="btn btn-primary">Browse Games</a>
+    </div>
+    <div class="hero-stats" id="heroStats">
+      <div class="hero-stat"><span class="hs-value" id="statGamesCount">—</span><span class="hs-label">Games</span></div>
+      <div class="hero-stat"><span class="hs-value" id="statKeysCount">—</span><span class="hs-label">Product Keys</span></div>
+      <div class="hero-stat"><span class="hs-value">24/7</span><span class="hs-label">Access</span></div>
+      <div class="hero-stat"><span class="hs-value">Secure</span><span class="hs-label">Verified Keys</span></div>
+    </div>
+  </section>
+
+  <section class="container" id="games">
+    <div class="games-toolbar">
+      <h2 class="section-title">All Games</h2>
+      <div class="toolbar-right">
+        <span class="results-count" id="resultsCount"></span>
+        <select id="sortSelect" aria-label="Sort games">
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="newest">Newest</option>
+        </select>
+      </div>
+    </div>
+    <div class="game-grid fade-in" id="gameGrid">
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+    </div>
+  </section>
+
+  <section class="container" id="requestGameSection" style="max-width:640px; margin:60px auto;">
+    <h2 class="section-title">Can't find a game?</h2>
+    <div class="inline-form-panel">
+      <p style="color:var(--muted); font-size:.9rem; margin-bottom:14px;">Tell us what you're looking for and we'll try to add it.</p>
+      <form id="gameRequestForm">
+        <div class="form-group">
+          <label for="reqGameName">Game Name</label>
+          <input type="text" id="reqGameName" placeholder="e.g. Elden Ring" required>
+        </div>
+        <div class="form-group">
+          <label for="reqNote">Notes (optional)</label>
+          <textarea id="reqNote" placeholder="Any details — edition, platform, etc."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" id="reqSubmitBtn">Submit Request</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- ================= GAME DETAILS PAGE ================= -->
+<main class="container game-details" id="page-game" style="display:none;">
+  <div id="gameDetails"><div class="skeleton" style="height:420px;"></div></div>
+</main>
+
+<!-- ================= ADMIN LOGIN PAGE ================= -->
+<main id="page-admin-login" style="display:none;">
+  <div class="admin-login-wrap">
+    <div class="admin-login-card">
+      <div class="lock-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h1>Admin Login</h1>
+      <p>Enter the admin password to manage RR Repack.</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+          <div class="form-error" id="loginError">Incorrect password. Try again.</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Log In</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- ================= ADMIN DASHBOARD PAGE ================= -->
+<main id="page-admin" style="display:none;">
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <div class="admin-nav-item active" data-view="dashboard">Dashboard</div>
+      <div class="admin-nav-item" data-view="games">Games</div>
+      <div class="admin-nav-item" data-view="add-game">Add Game</div>
+      <div class="admin-nav-item" data-view="keys">Product Keys</div>
+      <div class="admin-nav-item" data-view="analytics">Analytics</div>
+      <div class="admin-nav-item" data-view="requests">Game Requests</div>
+      <div class="admin-nav-item" data-view="reports">Broken Link Reports</div>
+      <div class="admin-nav-item" data-view="activity">Activity Log</div>
+    </aside>
+
+    <div class="admin-main">
+
+      <!-- DASHBOARD -->
+      <section class="admin-view active" id="view-dashboard">
+        <h1 class="admin-page-title">Dashboard</h1>
+        <div class="stats-grid">
+          <div class="stat-card accent"><div class="stat-label">Total Games</div><div class="stat-value" id="statTotalGames">0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Product Keys</div><div class="stat-value" id="statTotalKeys">0</div></div>
+          <div class="stat-card"><div class="stat-label">Used Keys</div><div class="stat-value" id="statUsedKeys">0</div></div>
+          <div class="stat-card"><div class="stat-label">Unused Keys</div><div class="stat-value" id="statUnusedKeys">0</div></div>
+        </div>
+      </section>
+
+      <!-- GAMES LIST -->
+      <section class="admin-view" id="view-games">
+        <div class="admin-toolbar">
+          <h1 class="admin-page-title" style="margin-bottom:0;">Games</h1>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" id="importGamesBtn">Import CSV/JSON</button>
+            <input type="file" id="importGamesFile" accept=".json,.csv" style="display:none;">
+            <button class="btn btn-primary btn-sm" id="goAddGameBtn">+ Add New Game</button>
+          </div>
+        </div>
+        <p class="admin-subnote">Import accepts a JSON array of game objects, or a CSV with columns: gameName, about, thumbnail, gameSize, accessType, price, currency.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Game Name</th><th>Size</th><th>Access</th><th>Price</th><th>Keys</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="gamesTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ADD / EDIT GAME -->
+      <section class="admin-view" id="view-add-game">
+        <h1 class="admin-page-title" id="addGameTitle">Add New Game</h1>
+        <form id="gameForm">
+          <input type="hidden" id="editGameId">
+
+          <div class="panel form-section">
+            <h3>Game Information</h3>
+            <div class="form-group">
+              <label for="gameName">Game Name</label>
+              <input type="text" id="gameName">
+              <div class="form-error">Game name is required.</div>
+            </div>
+            <div class="form-group">
+              <label for="gameAbout">About Game</label>
+              <textarea id="gameAbout"></textarea>
+              <div class="form-error">About is required.</div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="gameThumb">Thumbnail Filename (e.g. 1.png)</label>
+                <input type="text" id="gameThumb" placeholder="1.png">
+                <div class="form-error">Thumbnail filename is required.</div>
+              </div>
+              <div class="form-group">
+                <label for="gameSize">Game Size (e.g. 45 GB)</label>
+                <input type="text" id="gameSize" placeholder="45 GB">
+                <div class="form-error">Game size is required.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel form-section">
+            <h3>Access & Pricing</h3>
+            <div class="form-group">
+              <label>Access Type</label>
+              <div class="access-type-options">
+                <label class="radio-pill"><input type="radio" name="accessType" value="free" checked> 🔵 Free</label>
+                <label class="radio-pill"><input type="radio" name="accessType" value="paid"> 🟣 Paid</label>
+                <label class="radio-pill"><input type="radio" name="accessType" value="coming-soon"> 🔴 Coming Soon</label>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="gamePrice">Original Price</label>
+                <input type="number" id="gamePrice" step="0.01" min="0" placeholder="9.99">
+              </div>
+              <div class="form-group">
+                <label for="gameSalePrice">Sale Price (optional)</label>
+                <input type="number" id="gameSalePrice" step="0.01" min="0" placeholder="4.99">
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="gameCurrency">Currency</label>
+                <select id="gameCurrency">
+                  <option value="USD">USD</option>
+                  <option value="LKR">LKR</option>
+                  <option value="EUR">EUR</option>
+                  <option value="INR">INR</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="requireKeyToggle">Require Product Key</label>
+                <select id="requireKeyToggle">
+                  <option value="yes">Yes — require a key to download</option>
+                  <option value="no">No — direct download</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="keyExpiryHours">Key Expiry (hours after use)</label>
+                <input type="number" id="keyExpiryHours" min="1" step="1" placeholder="12">
+              </div>
+              <div class="form-group">
+                <label for="publishAt">Publish Date/Time (leave blank to publish now)</label>
+                <input type="datetime-local" id="publishAt">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Badges</label>
+              <div class="access-type-options">
+                <label class="radio-pill"><input type="checkbox" id="badgeFeatured"> ⭐ Featured</label>
+                <label class="radio-pill"><input type="checkbox" id="badgeTrending"> 🔥 Trending</label>
+                <label class="radio-pill"><input type="checkbox" id="badgeNew"> 🆕 New Release</label>
+                <label class="radio-pill"><input type="checkbox" id="badgeHotDeal"> 💥 Hot Deal</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel form-section">
+            <h3>Minimum Requirements</h3>
+            <div class="form-row-2">
+              <div class="form-group"><label>OS</label><input type="text" id="minOS"></div>
+              <div class="form-group"><label>Processor / CPU</label><input type="text" id="minCPU"></div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group"><label>RAM</label><input type="text" id="minRAM"></div>
+              <div class="form-group"><label>Graphics / GPU</label><input type="text" id="minGPU"></div>
+            </div>
+            <div class="form-group"><label>Storage</label><input type="text" id="minStorage"></div>
+          </div>
+
+          <div class="panel form-section">
+            <h3>Recommended Requirements</h3>
+            <div class="form-row-2">
+              <div class="form-group"><label>OS</label><input type="text" id="recOS"></div>
+              <div class="form-group"><label>Processor / CPU</label><input type="text" id="recCPU"></div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group"><label>RAM</label><input type="text" id="recRAM"></div>
+              <div class="form-group"><label>Graphics / GPU</label><input type="text" id="recGPU"></div>
+            </div>
+            <div class="form-group"><label>Storage</label><input type="text" id="recStorage"></div>
+          </div>
+
+          <div class="panel form-section">
+            <h3>Download Links</h3>
+            <div class="dynamic-list" id="downloadLinksList"></div>
+            <button type="button" class="btn btn-outline btn-sm" id="addDownloadRowBtn">+ Add Download Part</button>
+          </div>
+
+          <div class="panel form-section">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+              <h3>Product Keys</h3>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-outline btn-sm" id="genKeysBtn">Fill Empty with Random Keys</button>
+                <button type="button" class="btn btn-outline btn-sm" id="bulkGenKeysBtn">Bulk Generate…</button>
+              </div>
+            </div>
+            <p class="admin-subnote">Use "Bulk Generate" to create many keys at once (e.g. 100).</p>
+            <div class="keys-grid" id="productKeysGrid"></div>
+            <div class="form-error" id="keysError" style="margin-top:10px;">Keys must not be empty and cannot contain duplicates.</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="saveGameBtn">Save Game</button>
+        </form>
+      </section>
+
+      <!-- PRODUCT KEYS -->
+      <section class="admin-view" id="view-keys">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <h1 class="admin-page-title">Product Keys</h1>
+          <button type="button" class="btn btn-outline btn-sm" id="exportKeysBtn">Export CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Game</th><th>Product Key</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="keysTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ANALYTICS -->
+      <section class="admin-view" id="view-analytics">
+        <h1 class="admin-page-title">Analytics</h1>
+        <div class="stats-grid">
+          <div class="stat-card accent"><div class="stat-label">Total Views</div><div class="stat-value" id="statTotalViews">0</div></div>
+          <div class="stat-card"><div class="stat-label">Total Downloads</div><div class="stat-value" id="statTotalDownloads">0</div></div>
+          <div class="stat-card"><div class="stat-label">Keys Used</div><div class="stat-value" id="statKeysUsedAnalytics">0</div></div>
+          <div class="stat-card"><div class="stat-label">Avg Rating</div><div class="stat-value" id="statAvgRating">—</div></div>
+        </div>
+        <div class="table-wrap" style="margin-top:24px;">
+          <table>
+            <thead><tr><th>Game</th><th>Views</th><th>Downloads</th><th>Keys Used</th><th>Rating</th></tr></thead>
+            <tbody id="analyticsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- GAME REQUESTS -->
+      <section class="admin-view" id="view-requests">
+        <h1 class="admin-page-title">Game Requests</h1>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Game</th><th>Note</th><th>Requested</th><th>Actions</th></tr></thead>
+            <tbody id="requestsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- BROKEN LINK REPORTS -->
+      <section class="admin-view" id="view-reports">
+        <h1 class="admin-page-title">Broken Link Reports</h1>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Game</th><th>Note</th><th>Reported</th><th>Actions</th></tr></thead>
+            <tbody id="reportsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ACTIVITY LOG -->
+      <section class="admin-view" id="view-activity">
+        <h1 class="admin-page-title">Activity Log</h1>
+        <div id="activityLogList"></div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- Delete confirmation modal (admin only) -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <h3>Delete this game?</h3>
+    <p>This will permanently remove the game and all its product keys. This can't be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" id="cancelDeleteBtn">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="confirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer" id="siteFooter">
+  <div class="container">&copy; 2026 RR Repack. All Rights Reserved.</div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+// ============================================================
+// RR REPACK — SINGLE-FILE APP (Firebase + hash router)
+// ============================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, getDoc, getDocs,
+  addDoc, updateDoc, deleteDoc, serverTimestamp, increment,
+  query, orderBy, limit
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ---------- Firebase config ----------
+const firebaseConfig = {
+  apiKey: "AIzaSyDQB9jZ1UZzjHlknLgZ5EvCtqNZowrxm3k",
+  authDomain: "rr-repack-new.firebaseapp.com",
+  projectId: "rr-repack-new",
+  storageBucket: "rr-repack-new.firebasestorage.app",
+  messagingSenderId: "1087124731396",
+  appId: "1:1087124731396:web:f979072863a2f5a783e751",
+  measurementId: "G-7JY7BB9HN0"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ---------- Shared utilities ----------
+function showToast(message, type = "info") {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transition = "opacity 0.3s ease";
+    setTimeout(() => toast.remove(), 300);
+  }, 3800);
+}
+const CURRENCY_SYMBOLS = { USD: "$", LKR: "Rs.", EUR: "€", INR: "₹" };
+function formatPrice(g) {
+  const sym = CURRENCY_SYMBOLS[g.currency] || "$";
+  return `${sym}${Number(g.price).toFixed(2)}`;
+}
+function gameBadges(g) {
+  const badges = [];
+  const accessType = g.accessType || "free";
+  if (accessType === "free") badges.push(`<span class="price-badge free">Free</span>`);
+  if (accessType === "coming-soon") badges.push(`<span class="price-badge coming-soon">Coming Soon</span>`);
+  if (accessType === "paid" && g.salePrice) badges.push(`<span class="price-badge sale">Sale</span>`);
+  if (g.badges?.new) badges.push(`<span class="price-badge new">New</span>`);
+  if (g.badges?.featured) badges.push(`<span class="price-badge featured">Featured</span>`);
+  if (g.badges?.trending) badges.push(`<span class="price-badge trending">Trending</span>`);
+  if (g.badges?.hotDeal) badges.push(`<span class="price-badge hot-deal">Hot Deal</span>`);
+  return badges.join("");
+}
+function priceBlock(g) {
+  const accessType = g.accessType || "free";
+  if (accessType === "free") return `<div class="game-card-price"><span class="current">FREE</span></div>`;
+  if (accessType === "coming-soon") return `<div class="game-card-price"><span class="current">Coming Soon</span></div>`;
+  if (!g.price) return "";
+  const sym = CURRENCY_SYMBOLS[g.currency] || "$";
+  if (g.salePrice && g.salePrice < g.price) {
+    const off = Math.round((1 - g.salePrice / g.price) * 100);
+    return `<div class="game-card-price"><span class="original">${sym}${Number(g.price).toFixed(2)}</span><span class="current">${sym}${Number(g.salePrice).toFixed(2)}</span><span class="off">${off}% OFF</span></div>`;
+  }
+  return `<div class="game-card-price"><span class="current">${sym}${Number(g.price).toFixed(2)}</span></div>`;
+}
+function thumbSrc(filename) {
+  if (!filename) return "placeholder.png";
+  return `${filename}`;
+}
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str ?? "";
+  return div.innerHTML;
+}
+function isValidUrl(str) {
+  try {
+    const u = new URL(str);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+function initMobileNav() {
+  const btn = document.getElementById("hamburgerBtn");
+  const nav = document.getElementById("navLinks");
+  if (!btn || !nav) return;
+  btn.addEventListener("click", () => nav.classList.toggle("open"));
+}
+initMobileNav();
+
+// ---------- Theme toggle ----------
+const THEME_KEY = "rr_repack_theme";
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  const btn = document.getElementById("themeToggleBtn");
+  if (btn) btn.textContent = theme === "light" ? "☀️" : "🌙";
+}
+(function initTheme() {
+  const saved = localStorage.getItem(THEME_KEY) ||
+    (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+  applyTheme(saved);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+    const next = current === "light" ? "dark" : "light";
+    localStorage.setItem(THEME_KEY, next);
+    applyTheme(next);
+  });
+})();
+
+// ---------- PWA (manifest + service worker generated inline, single-file) ----------
+const MANIFEST_JSON = {
+  name: "RR Repack",
+  short_name: "RR Repack",
+  description: "Discover games. Verify your key. Download and play.",
+  start_url: ".",
+  scope: ".",
+  display: "standalone",
+  background_color: "#0b0b0d",
+  theme_color: "#0b0b0d",
+  icons: [
+    { src: "logo.png", sizes: "192x192", type: "image/png" },
+    { src: "logo.png", sizes: "512x512", type: "image/png" }
+  ]
+};
+(function initManifest() {
+  const blob = new Blob([JSON.stringify(MANIFEST_JSON)], { type: "application/json" });
+  document.getElementById("manifestLink").href = URL.createObjectURL(blob);
+})();
+
+const SW_SOURCE = `
+const CACHE_NAME = "rr-repack-shell-v1";
+self.addEventListener("install", (event) => { self.skipWaiting(); });
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+  );
+  self.clients.claim();
+});
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  if (request.method !== "GET") return;
+  event.respondWith(
+    fetch(request)
+      .then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          if (request.url.startsWith(self.location.origin)) cache.put(request, copy);
+        });
+        return response;
+      })
+      .catch(() => caches.match(request))
+  );
+});
+`;
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    const swBlob = new Blob([SW_SOURCE], { type: "text/javascript" });
+    const swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl).catch(() => {});
+  });
+}
+
+// ---------- Activity log helper ----------
+async function logActivity(action, details = "") {
+  try {
+    await addDoc(collection(db, "activityLog"), { action, details, at: serverTimestamp() });
+  } catch (err) {
+    console.error("activity log failed", err);
+  }
+}
+
+const SESSION_KEY = "rr_repack_admin_session";
+// SECURITY WARNING: this client-side password check is NOT secure — anyone who
+// views the page source can read ADMIN_PASSWORD and bypass this gate entirely.
+// It only hides the admin UI from casual visitors; it does not protect your data,
+// since Firestore reads/writes below aren't actually gated by this check.
+// Before going live, replace this with Firebase Authentication (email/password
+// or similar) plus Firestore Security Rules that require an authenticated admin
+// UID for writes to `games` — see https://firebase.google.com/docs/auth and
+// https://firebase.google.com/docs/firestore/security/get-started
+const ADMIN_PASSWORD = "Pramitha Akka";
+
+// ============================================================
+// ROUTER
+// ============================================================
+const pages = {
+  home: document.getElementById("page-home"),
+  game: document.getElementById("page-game"),
+  "admin-login": document.getElementById("page-admin-login"),
+  admin: document.getElementById("page-admin"),
+};
+const navHome = document.querySelector(".nav-home");
+const navGames = document.querySelector(".nav-games");
+const navAdmin = document.querySelector(".nav-admin");
+const navViewSite = document.querySelector(".nav-view-site");
+const navLogout = document.getElementById("logoutBtn");
+const siteFooter = document.getElementById("siteFooter");
+const logoLink = document.getElementById("logoLink");
+
+function parseRoute() {
+  const raw = location.hash.slice(1) || "/";
+  const [pathAndQuery] = raw.split("#"); // strip any trailing in-page anchor like #games
+  const [path, queryStr] = pathAndQuery.split("?");
+  return { path: path || "/", params: new URLSearchParams(queryStr || "") };
+}
+
+function showPage(name) {
+  Object.entries(pages).forEach(([key, el]) => {
+    el.style.display = key === name ? "" : "none";
+  });
+  const isAdminArea = name === "admin-login" || name === "admin";
+  navHome.style.display = isAdminArea ? "none" : "";
+  navGames.style.display = isAdminArea ? "none" : "";
+  navAdmin.style.display = isAdminArea ? "none" : "";
+  navViewSite.style.display = isAdminArea ? "" : "none";
+  navLogout.style.display = name === "admin" ? "" : "none";
+  siteFooter.style.display = isAdminArea ? "none" : "";
+  logoLink.querySelector("span:not([data-tag])")?.remove();
+}
+
+function router() {
+  const { path, params } = parseRoute();
+
+  if (path === "/admin") {
+    if (sessionStorage.getItem(SESSION_KEY) !== "true") {
+      location.hash = "#/admin-login";
+      return;
+    }
+    showPage("admin");
+    initAdminOnce();
+    return;
+  }
+
+  if (path === "/admin-login") {
+    if (sessionStorage.getItem(SESSION_KEY) === "true") {
+      location.hash = "#/admin";
+      return;
+    }
+    showPage("admin-login");
+    return;
+  }
+
+  if (path === "/game") {
+    showPage("game");
+    loadGame(params.get("id"));
+    return;
+  }
+
+  // default: home
+  showPage("home");
+  loadGames();
+}
+
+window.addEventListener("hashchange", router);
+
+// ============================================================
+// HOME PAGE
+// ============================================================
+const gameGrid = document.getElementById("gameGrid");
+const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
+const resultsCount = document.getElementById("resultsCount");
+let allGamesHome = [];
+let homeLoaded = false;
+
+async function loadGames() {
+  if (homeLoaded) { applyFilters(); return; } // cache once per session load
+  try {
+    const snapshot = await getDocs(collection(db, "games"));
+    const now = Date.now();
+    allGamesHome = snapshot.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(g => !g.publishAt || g.publishAt <= now); // hide scheduled/未来 games from public site
+    homeLoaded = true;
+    applyFilters();
+    renderHomeRows();
+    renderHeroStats();
+  } catch (err) {
+    console.error(err);
+    gameGrid.innerHTML = `
+      <div class="empty-state">
+        <p>Couldn't connect to the game library. Please check your connection and refresh.</p>
+      </div>`;
+    showToast("Firebase connection error.", "error");
+  }
+}
+
+function cardHtml(game) {
+  return `
+    <a href="#/game?id=${game.id}" class="game-card">
+      <div class="thumb-wrap">
+<img src="${thumbSrc(game.thumbnail)}" alt="${escapeHtml(game.gameName)}" loading="lazy"
+  onerror="this.onerror=null;this.src='placeholder.png';">
+        <div class="game-card-badges">${gameBadges(game)}</div>
+      </div>
+      <div class="game-card-body">
+        <div class="game-card-title">${escapeHtml(game.gameName)}</div>
+        <span class="game-card-size">${escapeHtml(game.gameSize || "—")}</span>
+        ${priceBlock(game)}
+        <p class="game-card-desc">${escapeHtml(game.about || "")}</p>
+        <span class="game-card-downloads">⬇ ${game.downloads || 0} downloads</span>
+        <span class="btn btn-outline btn-block">${(game.accessType === "coming-soon") ? "Coming Soon" : "View Game"}</span>
+      </div>
+    </a>
+  `;
+}
+
+function renderHomeRows() {
+  // Featured / Trending / Recently Added rows removed — only "All Games" is shown.
+}
+
+function renderHeroStats() {
+  const gamesCountEl = document.getElementById("statGamesCount");
+  const keysCountEl = document.getElementById("statKeysCount");
+  if (gamesCountEl) gamesCountEl.textContent = allGamesHome.length;
+  if (keysCountEl) {
+    const totalKeys = allGamesHome.reduce((sum, g) => sum + (Array.isArray(g.productKeys) ? g.productKeys.length : 0), 0);
+    keysCountEl.textContent = totalKeys;
+  }
+}
+
+function sortGames(games) {
+  const mode = sortSelect ? sortSelect.value : "name-asc";
+  const list = [...games];
+  if (mode === "name-asc") list.sort((a, b) => (a.gameName || "").localeCompare(b.gameName || ""));
+  else if (mode === "name-desc") list.sort((a, b) => (b.gameName || "").localeCompare(a.gameName || ""));
+  else if (mode === "newest") list.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+  return list;
+}
+
+function applyFilters() {
+  const q = searchInput.value.trim().toLowerCase();
+  const filtered = q
+    ? allGamesHome.filter(g => (g.gameName || "").toLowerCase().includes(q) || (g.about || "").toLowerCase().includes(q))
+    : allGamesHome;
+  renderGames(sortGames(filtered));
+  if (resultsCount) {
+    resultsCount.textContent = homeLoaded ? `${filtered.length} game${filtered.length === 1 ? "" : "s"}` : "";
+  }
+}
+
+function renderGames(games) {
+  if (games.length === 0) {
+    const q = searchInput.value.trim();
+    gameGrid.innerHTML = `
+      <div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <p>${q ? `No games match "${escapeHtml(q)}".` : "No games found."}</p>
+        ${q ? `<button class="btn btn-outline" id="clearSearchBtn" style="margin-top:16px;">Clear search</button>` : ""}
+      </div>`;
+    const clearBtn = document.getElementById("clearSearchBtn");
+    if (clearBtn) clearBtn.addEventListener("click", () => { searchInput.value = ""; applyFilters(); searchInput.focus(); });
+    return;
+  }
+  gameGrid.innerHTML = games.map(cardHtml).join("");
+  gameGrid.classList.remove("fade-in");
+  void gameGrid.offsetWidth; // restart animation
+  gameGrid.classList.add("fade-in");
+}
+
+let searchDebounce;
+searchInput.addEventListener("input", () => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(applyFilters, 180);
+});
+if (sortSelect) sortSelect.addEventListener("change", applyFilters);
+
+// ---------- Game request form ----------
+const gameRequestForm = document.getElementById("gameRequestForm");
+if (gameRequestForm) {
+  gameRequestForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nameEl = document.getElementById("reqGameName");
+    const noteEl = document.getElementById("reqNote");
+    const name = nameEl.value.trim();
+    if (!name) { nameEl.focus(); return; }
+    const btn = document.getElementById("reqSubmitBtn");
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
+    try {
+      await addDoc(collection(db, "gameRequests"), {
+        gameName: name,
+        note: noteEl.value.trim(),
+        status: "pending",
+        at: serverTimestamp()
+      });
+      showToast("Thanks! Your request has been submitted.", "success");
+      logActivity("Game requested", name);
+      gameRequestForm.reset();
+    } catch (err) {
+      console.error(err);
+      showToast("Couldn't submit your request. Please try again.", "error");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Submit Request";
+    }
+  });
+}
+
+// ============================================================
+// GAME DETAILS PAGE
+// ============================================================
+const detailsEl = document.getElementById("gameDetails");
+let currentGame = null;
+
+async function loadGame(gameId) {
+  detailsEl.innerHTML = `<div class="skeleton" style="height:420px;"></div>`;
+  if (!gameId) {
+    renderNotFound();
+    return;
+  }
+  try {
+    const snap = await getDoc(doc(db, "games", gameId));
+    if (!snap.exists()) {
+      renderNotFound();
+      return;
+    }
+    currentGame = { id: snap.id, ...snap.data() };
+    document.getElementById("pageTitle").textContent = `RR Repack — ${currentGame.gameName}`;
+    setSeoMeta(currentGame);
+    renderGameDetails();
+    loadReviews(currentGame.id);
+    // Best-effort view counter — don't block rendering on it.
+    updateDoc(doc(db, "games", gameId), { views: increment(1) }).catch(() => {});
+  } catch (err) {
+    console.error(err);
+    detailsEl.innerHTML = `<div class="empty-state"><p>Firebase connection error. Please refresh and try again.</p></div>`;
+    showToast("Firebase connection error.", "error");
+  }
+}
+
+function setSeoMeta(g) {
+  const desc = (g.about || "").slice(0, 155);
+  const ensureMeta = (attr, key, content) => {
+    let el = document.querySelector(`meta[${attr}="${key}"]`);
+    if (!el) { el = document.createElement("meta"); el.setAttribute(attr, key); document.head.appendChild(el); }
+    el.setAttribute("content", content);
+  };
+  ensureMeta("name", "description", desc);
+  ensureMeta("property", "og:title", g.gameName || "RR Repack");
+  ensureMeta("property", "og:description", desc);
+  ensureMeta("property", "og:image", thumbSrc(g.thumbnail));
+}
+
+function breadcrumbsHtml(g) {
+  return `
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="#/">Home</a><span class="sep">›</span>
+      <a href="#/#games">Games</a><span class="sep">›</span>
+      <span class="current">${escapeHtml(g.gameName)}</span>
+    </nav>`;
+}
+
+function renderNotFound() {
+  detailsEl.innerHTML = `
+    <div class="empty-state">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <p>Game not found.</p>
+      <a href="#/" class="btn btn-outline" style="margin-top:16px; display:inline-flex;">Back to Games</a>
+    </div>`;
+}
+
+function req(r) {
+  r = r || {};
+  return { min: r.minimum || {}, rec: r.recommended || {} };
+}
+
+function renderGameDetails() {
+  const g = currentGame;
+  const { min, rec } = req(g.requirements);
+
+  detailsEl.innerHTML = `
+    ${breadcrumbsHtml(g)}
+    <div class="details-hero">
+      <div class="details-thumb">
+        <img src="${thumbSrc(g.thumbnail)}" alt="${escapeHtml(g.gameName)}"
+             onerror="this.onerror=null;this.src='placeholder.png';">
+      </div>
+      <div class="details-info">
+        <div class="details-badges">${gameBadges(g)}</div>
+        <h1>${escapeHtml(g.gameName)}</h1>
+        <div class="details-meta">
+          <span class="meta-pill">${escapeHtml(g.gameSize || "—")}</span>
+        </div>
+        ${priceBlock(g)}
+        <p class="details-about">${escapeHtml(g.about || "")}</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>PC Requirements</h2>
+      <div class="req-grid">
+        <div class="req-col">
+          <h3>Minimum</h3>
+          ${reqRows(min)}
+        </div>
+        <div class="req-col">
+          <h3>Recommended</h3>
+          ${reqRows(rec)}
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Download</h2>
+      ${downloadPanelInner(g)}
+      <div style="margin-top:14px;">
+        <button type="button" class="btn btn-outline btn-sm" id="reportBrokenBtn">🚩 Report broken link</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Ratings &amp; Reviews</h2>
+      <div id="reviewsPanel">
+        <div class="skeleton" style="height:80px;"></div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("reportBrokenBtn").addEventListener("click", () => openReportForm(g));
+
+  if (g.accessType === "coming-soon") return;
+
+  if (g.accessType === "paid") {
+    document.getElementById("buyNowBtn").addEventListener("click", () => buyNowWhatsApp(g));
+  }
+
+  const needsKey = g.requireKey !== false;
+  if (needsKey) {
+    document.getElementById("verifyKeyBtn").addEventListener("click", verifyKey);
+    document.getElementById("productKeyInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") verifyKey();
+    });
+  } else {
+    showDownloads();
+  }
+}
+
+function downloadPanelInner(g) {
+  if (g.accessType === "coming-soon") {
+    return `<div class="empty-state"><p>This game isn't available yet — check back soon.</p></div>`;
+  }
+  if (g.accessType === "paid") {
+    return `
+      <div id="buyGate">
+        <p style="color:var(--muted); margin-bottom:16px;">This is a paid game. Tap Buy Now to message us on WhatsApp for payment details, or enter your product key below if you've already purchased.</p>
+        <button class="btn btn-primary" id="buyNowBtn">Buy Now — ${formatPrice(g)}</button>
+      </div>
+      <div class="key-divider" style="margin:20px 0; color:var(--muted); font-family:var(--font-mono); font-size:0.85rem;">— already purchased? —</div>
+      <div id="keyGate">
+        <div class="form-group">
+          <label for="productKeyInput">Enter Product Key</label>
+        </div>
+        <div class="key-entry">
+          <input type="text" id="productKeyInput" placeholder="RR-XXXX-000">
+          <button class="btn btn-primary" id="verifyKeyBtn">Verify</button>
+        </div>
+        <div class="key-status" id="keyStatus"></div>
+      </div>
+      <div id="downloadArea" style="display:none;"></div>
+    `;
+  }
+  const needsKey = g.requireKey !== false;
+  if (!needsKey) {
+    return `<div id="downloadArea"></div>`;
+  }
+  return `
+      <div id="keyGate">
+        <div class="form-group">
+          <label for="productKeyInput">Enter Product Key</label>
+        </div>
+        <div class="key-entry">
+          <input type="text" id="productKeyInput" placeholder="RR-XXXX-000">
+          <button class="btn btn-primary" id="verifyKeyBtn">Verify</button>
+        </div>
+        <div class="key-status" id="keyStatus"></div>
+      </div>
+      <div id="downloadArea" style="display:none;"></div>
+  `;
+}
+
+const WHATSAPP_NUMBER = "94778505374"; // 0778505374 in international format (Sri Lanka)
+
+function buyNowWhatsApp(g) {
+  const price = g.salePrice && g.salePrice < g.price ? g.salePrice : g.price;
+  const priceText = `${CURRENCY_SYMBOLS[g.currency] || "$"}${Number(price).toFixed(2)}`;
+  const message = `I Want Buy ${g.gameName} Give Payement Destails ,\nGame Prize is ${priceText}`;
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+
+function reqRows(r) {
+  const rows = [
+    ["OS", r.os], ["CPU", r.cpu], ["RAM", r.ram], ["GPU", r.gpu], ["Storage", r.storage]
+  ];
+  return rows.map(([label, val]) =>
+    `<div class="req-row"><span>${label}:</span><span>${escapeHtml(val || "—")}</span></div>`
+  ).join("");
+}
+
+async function verifyKey() {
+  const input = document.getElementById("productKeyInput");
+  const statusEl = document.getElementById("keyStatus");
+  const enteredKey = input.value.trim();
+
+  statusEl.className = "key-status";
+
+  if (!enteredKey) {
+    statusEl.textContent = "Please enter a product key.";
+    statusEl.classList.add("show", "error");
+    return;
+  }
+
+  const keys = currentGame.productKeys || [];
+  const keyIndex = keys.findIndex(k => k.key.toUpperCase() === enteredKey.toUpperCase());
+
+  if (keyIndex === -1) {
+    statusEl.textContent = "Invalid product key.";
+    statusEl.classList.add("show", "error");
+    return;
+  }
+
+  const KEY_EXPIRY_MS = (Number(currentGame.keyExpiryHours) || 12) * 60 * 60 * 1000;
+  const existing = keys[keyIndex];
+
+  if (existing.used) {
+    const usedAt = existing.usedAt || 0;
+    const expiresAt = usedAt + KEY_EXPIRY_MS;
+    if (Date.now() >= expiresAt) {
+      statusEl.textContent = "This product key has expired. Please contact us for a new key.";
+      statusEl.classList.add("show", "error");
+      return;
+    }
+    // Still within the 12-hour window — let them back in to re-download.
+    statusEl.textContent = "Product key verified! Your download link is active.";
+    statusEl.classList.add("show", "success");
+    showDownloads(expiresAt);
+    return;
+  }
+
+  try {
+    const usedAt = Date.now();
+    const updatedKeys = keys.map((k, i) => i === keyIndex ? { ...k, used: true, usedAt } : k);
+    await updateDoc(doc(db, "games", currentGame.id), { productKeys: updatedKeys });
+    currentGame.productKeys = updatedKeys;
+
+    statusEl.textContent = "Product key verified successfully! Your download link is active for 12 hours.";
+    statusEl.classList.add("show", "success");
+    showToast("Key verified — enjoy the download!", "success");
+    showDownloads(usedAt + KEY_EXPIRY_MS);
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "Something went wrong verifying your key. Please try again.";
+    statusEl.classList.add("show", "error");
+    showToast("Firebase connection error.", "error");
+  }
+}
+
+let keyCountdownInterval = null;
+
+function formatCountdown(ms) {
+  if (ms <= 0) return "expired";
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return `${String(h).padStart(2, "0")}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
+}
+
+function showDownloads(expiresAt) {
+  const keyInput = document.getElementById("productKeyInput");
+  const verifyBtn = document.getElementById("verifyKeyBtn");
+  if (keyInput) keyInput.disabled = true;
+  if (verifyBtn) verifyBtn.disabled = true;
+
+  const area = document.getElementById("downloadArea");
+  const links = currentGame.downloadLinks || [];
+
+  const timerHtml = expiresAt
+    ? `<div class="key-expiry-timer" id="keyExpiryTimer" style="margin-bottom:14px; font-family:var(--font-mono); color:var(--accent);"></div>`
+    : "";
+
+  if (links.length === 0) {
+    area.innerHTML = `${timerHtml}<p style="color:var(--muted); margin-top:16px;">No download links have been added for this game yet.</p>`;
+  } else {
+    area.innerHTML = `
+      ${timerHtml}
+      <div class="download-list" style="margin-top:20px;">
+        ${links.map(link => `
+          <div class="download-item">
+            <div>
+              <div class="dl-name">${escapeHtml(link.name)}</div>
+              <div class="dl-size">${escapeHtml(link.size)}</div>
+            </div>
+            <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Download</a>
+          </div>
+        `).join("")}
+      </div>`;
+  }
+  area.style.display = "block";
+
+  if (keyCountdownInterval) clearInterval(keyCountdownInterval);
+  if (expiresAt) {
+    const timerEl = document.getElementById("keyExpiryTimer");
+    const tick = () => {
+      const remaining = expiresAt - Date.now();
+      if (!timerEl) { clearInterval(keyCountdownInterval); return; }
+      if (remaining <= 0) {
+        timerEl.textContent = "⏱ Your download link has expired.";
+        timerEl.style.color = "var(--danger)";
+        area.querySelectorAll(".download-item a, .btn").forEach(a => {
+          a.style.pointerEvents = "none";
+          a.style.opacity = "0.4";
+        });
+        clearInterval(keyCountdownInterval);
+        return;
+      }
+      timerEl.textContent = `⏱ Download link expires in ${formatCountdown(remaining)}`;
+    };
+    tick();
+    keyCountdownInterval = setInterval(tick, 1000);
+  }
+}
+
+// ---------- Download counter ----------
+document.addEventListener("click", (e) => {
+  const link = e.target.closest?.(".download-item a");
+  if (link && currentGame) {
+    updateDoc(doc(db, "games", currentGame.id), { downloads: increment(1) }).catch(() => {});
+  }
+});
+
+// ---------- Report broken link ----------
+function openReportForm(g) {
+  const existing = document.getElementById("reportFormPanel");
+  if (existing) { existing.remove(); return; }
+  const panel = document.createElement("div");
+  panel.className = "inline-form-panel";
+  panel.id = "reportFormPanel";
+  panel.innerHTML = `
+    <div class="form-group">
+      <label for="reportNote">What's wrong with the download?</label>
+      <textarea id="reportNote" placeholder="e.g. Part 2 link is dead"></textarea>
+    </div>
+    <button type="button" class="btn btn-primary btn-sm" id="reportSubmitBtn">Send Report</button>
+  `;
+  document.getElementById("reportBrokenBtn").insertAdjacentElement("afterend", panel);
+  document.getElementById("reportSubmitBtn").addEventListener("click", async () => {
+    const note = document.getElementById("reportNote").value.trim();
+    const btn = document.getElementById("reportSubmitBtn");
+    btn.disabled = true;
+    btn.textContent = "Sending...";
+    try {
+      await addDoc(collection(db, "reports"), {
+        gameId: g.id, gameName: g.gameName, note, status: "open", at: serverTimestamp()
+      });
+      showToast("Thanks — we'll look into it.", "success");
+      logActivity("Broken link reported", `${g.gameName}: ${note || "(no note)"}`);
+      panel.remove();
+    } catch (err) {
+      console.error(err);
+      showToast("Couldn't send report. Please try again.", "error");
+      btn.disabled = false;
+      btn.textContent = "Send Report";
+    }
+  });
+}
+
+// ---------- Ratings & Reviews ----------
+function starsHtml(avg, interactiveId) {
+  let html = `<div class="star-rating${interactiveId ? " interactive" : ""}"${interactiveId ? ` id="${interactiveId}"` : ""}>`;
+  for (let i = 1; i <= 5; i++) {
+    const filled = interactiveId ? false : i <= Math.round(avg || 0);
+    html += `<span class="star${filled ? " filled" : ""}" data-val="${i}">★</span>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+async function loadReviews(gameId) {
+  const panel = document.getElementById("reviewsPanel");
+  if (!panel) return;
+  try {
+    const snap = await getDocs(collection(db, "games", gameId, "reviews"));
+    const reviews = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.at?.seconds || 0) - (a.at?.seconds || 0));
+    renderReviews(gameId, reviews);
+  } catch (err) {
+    console.error(err);
+    panel.innerHTML = `<p style="color:var(--muted);">Couldn't load reviews.</p>`;
+  }
+}
+
+function renderReviews(gameId, reviews) {
+  const panel = document.getElementById("reviewsPanel");
+  if (!panel) return;
+  const count = reviews.length;
+  const avg = count ? reviews.reduce((s, r) => s + (r.stars || 0), 0) / count : 0;
+
+  panel.innerHTML = `
+    <div class="rating-summary">
+      <span class="avg">${avg.toFixed(1)}</span>
+      ${starsHtml(avg)}
+      <span style="color:var(--muted); font-size:.85rem;">(${count} review${count === 1 ? "" : "s"})</span>
+    </div>
+    <div class="review-form-row">
+      <input type="text" id="reviewName" placeholder="Your name">
+      ${starsHtml(0, "reviewStarsInput")}
+      <textarea id="reviewText" placeholder="Share your thoughts about this game..."></textarea>
+      <button type="button" class="btn btn-primary btn-sm" id="submitReviewBtn" style="align-self:flex-start;">Post Review</button>
+    </div>
+    <div id="reviewsList">
+      ${reviews.length === 0
+        ? `<p style="color:var(--muted); font-size:.9rem;">No reviews yet — be the first!</p>`
+        : reviews.map(r => `
+          <div class="review-item">
+            <div class="review-head">
+              <span class="review-name">${escapeHtml(r.name || "Anonymous")}</span>
+              <span class="review-date">${r.at?.seconds ? new Date(r.at.seconds * 1000).toLocaleDateString() : ""}</span>
+            </div>
+            ${starsHtml(r.stars)}
+            <p class="review-text">${escapeHtml(r.text || "")}</p>
+          </div>
+        `).join("")}
+    </div>
+  `;
+
+  let selectedStars = 0;
+  const starEls = panel.querySelectorAll("#reviewStarsInput .star");
+  starEls.forEach(s => {
+    s.addEventListener("click", () => {
+      selectedStars = Number(s.dataset.val);
+      starEls.forEach(el => el.classList.toggle("filled", Number(el.dataset.val) <= selectedStars));
+    });
+  });
+
+  document.getElementById("submitReviewBtn").addEventListener("click", async () => {
+    const nameEl = document.getElementById("reviewName");
+    const textEl = document.getElementById("reviewText");
+    if (!selectedStars) { showToast("Please select a star rating.", "error"); return; }
+    if (!textEl.value.trim()) { showToast("Please write a short review.", "error"); return; }
+    const btn = document.getElementById("submitReviewBtn");
+    btn.disabled = true;
+    btn.textContent = "Posting...";
+    try {
+      await addDoc(collection(db, "games", gameId, "reviews"), {
+        name: nameEl.value.trim() || "Anonymous",
+        stars: selectedStars,
+        text: textEl.value.trim(),
+        at: serverTimestamp()
+      });
+      showToast("Review posted — thanks!", "success");
+      loadReviews(gameId);
+    } catch (err) {
+      console.error(err);
+      showToast("Couldn't post review. Please try again.", "error");
+      btn.disabled = false;
+      btn.textContent = "Post Review";
+    }
+  });
+}
+
+// ============================================================
+// ADMIN LOGIN
+// ============================================================
+const loginForm = document.getElementById("loginForm");
+const passwordInput = document.getElementById("password");
+const loginError = document.getElementById("loginError");
+
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const entered = passwordInput.value;
+  if (entered === ADMIN_PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, "true");
+    location.hash = "#/admin";
+  } else {
+    loginError.classList.add("show");
+    passwordInput.classList.add("invalid");
+    passwordInput.value = "";
+    passwordInput.focus();
+  }
+});
+passwordInput.addEventListener("input", () => {
+  loginError.classList.remove("show");
+  passwordInput.classList.remove("invalid");
+});
+navLogout.addEventListener("click", () => {
+  sessionStorage.removeItem(SESSION_KEY);
+  location.hash = "#/admin-login";
+});
+
+// ============================================================
+// ADMIN DASHBOARD
+// ============================================================
+let adminInited = false;
+let allGamesAdmin = [];
+
+function initAdminOnce() {
+  if (adminInited) {
+    // Re-entering admin: refresh current view's data
+    const activeView = document.querySelector(".admin-nav-item.active")?.dataset.view || "dashboard";
+    loadAllGamesAdmin().then(() => switchView(activeView));
+    return;
+  }
+  adminInited = true;
+
+  const navItems = document.querySelectorAll(".admin-nav-item[data-view]");
+  const views = document.querySelectorAll(".admin-view");
+
+  window.switchView = function switchView(viewName) {
+    views.forEach(v => v.classList.toggle("active", v.id === `view-${viewName}`));
+    navItems.forEach(n => n.classList.toggle("active", n.dataset.view === viewName));
+    if (viewName === "games") renderGamesTable();
+    if (viewName === "keys") renderKeysTable();
+    if (viewName === "dashboard") renderStats();
+    if (viewName === "analytics") renderAnalytics();
+    if (viewName === "requests") renderRequestsTable();
+    if (viewName === "reports") renderReportsTable();
+    if (viewName === "activity") renderActivityLog();
+  };
+
+  navItems.forEach(item => {
+    item.addEventListener("click", () => switchView(item.dataset.view));
+  });
+  document.getElementById("goAddGameBtn").addEventListener("click", () => {
+    resetGameForm();
+    switchView("add-game");
+  });
+
+  // ---------- Bulk import (CSV / JSON) ----------
+  function parseCsv(text) {
+    const lines = text.trim().split(/\r?\n/);
+    const headers = lines[0].split(",").map(h => h.trim());
+    return lines.slice(1).filter(Boolean).map(line => {
+      const cells = line.split(",").map(c => c.trim().replace(/^"|"$/g, ""));
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = cells[i] ?? "");
+      return obj;
+    });
+  }
+
+  function normalizeImportedGame(raw) {
+    return {
+      gameName: raw.gameName || raw.name || "Untitled",
+      about: raw.about || "",
+      thumbnail: raw.thumbnail || "",
+      gameSize: raw.gameSize || raw.size || "",
+      accessType: raw.accessType || "free",
+      price: raw.price ? Number(raw.price) : null,
+      salePrice: raw.salePrice ? Number(raw.salePrice) : null,
+      currency: raw.currency || "USD",
+      requireKey: raw.requireKey === undefined ? true : !!raw.requireKey,
+      keyExpiryHours: raw.keyExpiryHours ? Number(raw.keyExpiryHours) : 12,
+      badges: raw.badges || {},
+      requirements: raw.requirements || { minimum: {}, recommended: {} },
+      downloadLinks: raw.downloadLinks || [],
+      productKeys: raw.productKeys || [],
+      views: 0, downloads: 0,
+      createdAt: serverTimestamp()
+    };
+  }
+
+  document.getElementById("importGamesBtn")?.addEventListener("click", () => {
+    document.getElementById("importGamesFile").click();
+  });
+  document.getElementById("importGamesFile")?.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      let items = [];
+      if (file.name.endsWith(".json")) {
+        const parsed = JSON.parse(text);
+        items = Array.isArray(parsed) ? parsed : [parsed];
+      } else {
+        items = parseCsv(text);
+      }
+      let count = 0;
+      for (const raw of items) {
+        await addDoc(collection(db, "games"), normalizeImportedGame(raw));
+        count++;
+      }
+      await logActivity("Bulk import", `Imported ${count} game(s) from ${file.name}`);
+      showToast(`Imported ${count} game(s).`, "success");
+      await loadAllGamesAdminInner();
+      renderGamesTable();
+      renderStats();
+    } catch (err) {
+      console.error(err);
+      showToast("Import failed. Check the file format.", "error");
+    } finally {
+      e.target.value = "";
+    }
+  });
+
+  async function loadAllGamesAdminInner() {
+    try {
+      const snapshot = await getDocs(collection(db, "games"));
+      allGamesAdmin = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch (err) {
+      console.error(err);
+      showToast("Firebase connection error.", "error");
+    }
+  }
+  window.loadAllGamesAdmin = loadAllGamesAdminInner;
+
+  function renderStats() {
+    const totalGames = allGamesAdmin.length;
+    let totalKeys = 0, usedKeys = 0;
+    allGamesAdmin.forEach(g => {
+      const keys = g.productKeys || [];
+      totalKeys += keys.length;
+      usedKeys += keys.filter(k => k.used).length;
+    });
+    document.getElementById("statTotalGames").textContent = totalGames;
+    document.getElementById("statTotalKeys").textContent = totalKeys;
+    document.getElementById("statUsedKeys").textContent = usedKeys;
+    document.getElementById("statUnusedKeys").textContent = totalKeys - usedKeys;
+  }
+
+  function renderGamesTable() {
+    const tbody = document.getElementById("gamesTableBody");
+    if (allGamesAdmin.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="color:var(--muted);">No games added yet.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = allGamesAdmin.map(g => `
+      <tr>
+        <td>${escapeHtml(g.gameName)}</td>
+        <td>${escapeHtml(g.gameSize || "—")}</td>
+        <td>${escapeHtml((g.accessType || "free").replace("-", " "))}</td>
+        <td>${g.accessType === "paid" ? formatPrice(g) : "—"}</td>
+        <td>${(g.productKeys || []).length}</td>
+        <td>${g.publishAt && g.publishAt > Date.now() ? `<span class="badge scheduled">Scheduled</span>` : `<span class="badge published">Published</span>`}</td>
+        <td class="actions">
+          <button class="btn btn-outline btn-sm" data-action="view" data-id="${g.id}">View</button>
+          <button class="btn btn-outline btn-sm" data-action="edit" data-id="${g.id}">Edit</button>
+          <button class="btn btn-danger btn-sm" data-action="delete" data-id="${g.id}">Delete</button>
+        </td>
+      </tr>
+    `).join("");
+
+    tbody.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        const action = btn.dataset.action;
+        if (action === "view") window.open(`#/game?id=${id}`, "_blank");
+        if (action === "edit") loadGameIntoForm(id);
+        if (action === "delete") openDeleteModal(id);
+      });
+    });
+  }
+
+  function keyStatusInfo(k, game) {
+    if (!k.used) return { label: "Unused", cls: "unused" };
+    const expiryHours = Number(game?.keyExpiryHours) || 12;
+    const expiresAt = (k.usedAt || 0) + expiryHours * 60 * 60 * 1000;
+    if (Date.now() >= expiresAt) return { label: "Expired", cls: "expired" };
+    return { label: "Used (active)", cls: "used" };
+  }
+
+  function renderKeysTable() {
+    const tbody = document.getElementById("keysTableBody");
+    const rows = [];
+    allGamesAdmin.forEach(g => {
+      (g.productKeys || []).forEach((k, idx) => {
+        rows.push({ gameId: g.id, game: g.gameName, gameObj: g, key: k.key, used: k.used, usedAt: k.usedAt, idx });
+      });
+    });
+    if (rows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted);">No product keys yet.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map(r => {
+      const status = keyStatusInfo(r, r.gameObj);
+      return `
+      <tr>
+        <td>${escapeHtml(r.game)}</td>
+        <td style="font-family:var(--font-mono);">${escapeHtml(r.key)}</td>
+        <td><span class="badge ${status.cls}">${status.label}</span></td>
+        <td class="actions">
+          <button type="button" class="btn btn-outline btn-sm copy-key-btn" data-key="${escapeHtml(r.key)}">Copy</button>
+          ${r.used
+            ? `<button type="button" class="btn btn-outline btn-sm key-status-btn" data-game="${r.gameId}" data-idx="${r.idx}" data-action="unuse">Mark Unused</button>
+               <button type="button" class="btn btn-outline btn-sm key-status-btn" data-game="${r.gameId}" data-idx="${r.idx}" data-action="reset">Reset 12h Timer</button>`
+            : `<button type="button" class="btn btn-outline btn-sm key-status-btn" data-game="${r.gameId}" data-idx="${r.idx}" data-action="use">Mark Used</button>`}
+        </td>
+      </tr>`;
+    }).join("");
+    tbody.querySelectorAll(".copy-key-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(btn.dataset.key);
+          showToast("Key copied.", "success");
+        } catch {
+          showToast("Couldn't copy key.", "error");
+        }
+      });
+    });
+    tbody.querySelectorAll(".key-status-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const gameId = btn.dataset.game;
+        const idx = Number(btn.dataset.idx);
+        const action = btn.dataset.action;
+        const game = allGamesAdmin.find(g => g.id === gameId);
+        if (!game) return;
+        const keys = [...(game.productKeys || [])];
+        if (!keys[idx]) return;
+
+        if (action === "unuse") keys[idx] = { ...keys[idx], used: false, usedAt: null };
+        if (action === "use") keys[idx] = { ...keys[idx], used: true, usedAt: Date.now() };
+        if (action === "reset") keys[idx] = { ...keys[idx], used: true, usedAt: Date.now() };
+
+        try {
+          await updateDoc(doc(db, "games", gameId), { productKeys: keys });
+          game.productKeys = keys;
+          showToast("Key status updated.", "success");
+          logActivity("Key status changed", `${game.gameName} — ${action}`);
+          renderKeysTable();
+        } catch (err) {
+          console.error(err);
+          showToast("Firebase connection error. Could not update key.", "error");
+        }
+      });
+    });
+  }
+
+  document.getElementById("exportKeysBtn")?.addEventListener("click", () => {
+    const rows = [["Game", "Key", "Status"]];
+    allGamesAdmin.forEach(g => {
+      (g.productKeys || []).forEach(k => rows.push([g.gameName, k.key, keyStatusInfo(k, g).label]));
+    });
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "rr-repack-product-keys.csv";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  // ---------- Analytics ----------
+  function renderAnalytics() {
+    const totalViews = allGamesAdmin.reduce((s, g) => s + (g.views || 0), 0);
+    const totalDownloads = allGamesAdmin.reduce((s, g) => s + (g.downloads || 0), 0);
+    let keysUsed = 0;
+    allGamesAdmin.forEach(g => { keysUsed += (g.productKeys || []).filter(k => k.used).length; });
+
+    document.getElementById("statTotalViews").textContent = totalViews;
+    document.getElementById("statTotalDownloads").textContent = totalDownloads;
+    document.getElementById("statKeysUsedAnalytics").textContent = keysUsed;
+
+    const tbody = document.getElementById("analyticsTableBody");
+    if (allGamesAdmin.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="color:var(--muted);">No games yet.</td></tr>`;
+      document.getElementById("statAvgRating").textContent = "—";
+      return;
+    }
+
+    const sorted = [...allGamesAdmin].sort((a, b) => (b.views || 0) - (a.views || 0));
+    tbody.innerHTML = sorted.map(g => `
+      <tr>
+        <td>${escapeHtml(g.gameName)}</td>
+        <td>${g.views || 0}</td>
+        <td>${g.downloads || 0}</td>
+        <td>${(g.productKeys || []).filter(k => k.used).length} / ${(g.productKeys || []).length}</td>
+        <td id="ratingCell-${g.id}">…</td>
+      </tr>
+    `).join("");
+
+    // Fetch each game's review average (best-effort, in parallel).
+    Promise.all(allGamesAdmin.map(async g => {
+      try {
+        const snap = await getDocs(collection(db, "games", g.id, "reviews"));
+        const reviews = snap.docs.map(d => d.data());
+        const avg = reviews.length ? reviews.reduce((s, r) => s + (r.stars || 0), 0) / reviews.length : null;
+        return { id: g.id, avg, count: reviews.length };
+      } catch { return { id: g.id, avg: null, count: 0 }; }
+    })).then(results => {
+      let sumAvg = 0, ratedGames = 0;
+      results.forEach(r => {
+        const cell = document.getElementById(`ratingCell-${r.id}`);
+        if (cell) cell.textContent = r.avg ? `${r.avg.toFixed(1)}★ (${r.count})` : "—";
+        if (r.avg) { sumAvg += r.avg; ratedGames++; }
+      });
+      document.getElementById("statAvgRating").textContent = ratedGames ? (sumAvg / ratedGames).toFixed(1) : "—";
+    });
+  }
+
+  // ---------- Game Requests ----------
+  async function renderRequestsTable() {
+    const tbody = document.getElementById("requestsTableBody");
+    tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted);">Loading…</td></tr>`;
+    try {
+      const snap = await getDocs(collection(db, "gameRequests"));
+      const rows = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.at?.seconds || 0) - (a.at?.seconds || 0));
+      if (rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted);">No requests yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${escapeHtml(r.gameName)}</td>
+          <td>${escapeHtml(r.note || "—")}</td>
+          <td>${r.at?.seconds ? new Date(r.at.seconds * 1000).toLocaleDateString() : "—"}</td>
+          <td class="actions">
+            <button class="btn btn-outline btn-sm" data-action="resolve-request" data-id="${r.id}">Mark Done</button>
+            <button class="btn btn-danger btn-sm" data-action="delete-request" data-id="${r.id}">Delete</button>
+          </td>
+        </tr>
+      `).join("");
+      tbody.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = btn.dataset.id;
+          const action = btn.dataset.action;
+          try {
+            if (action === "resolve-request") {
+              await updateDoc(doc(db, "gameRequests", id), { status: "done" });
+              showToast("Marked as done.", "success");
+            } else if (action === "delete-request") {
+              await deleteDoc(doc(db, "gameRequests", id));
+              showToast("Request deleted.", "success");
+            }
+            renderRequestsTable();
+          } catch (err) {
+            console.error(err);
+            showToast("Firebase connection error.", "error");
+          }
+        });
+      });
+    } catch (err) {
+      console.error(err);
+      tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted);">Couldn't load requests.</td></tr>`;
+    }
+  }
+
+  // ---------- Broken Link Reports ----------
+  async function renderReportsTable() {
+    const tbody = document.getElementById("reportsTableBody");
+    tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted);">Loading…</td></tr>`;
+    try {
+      const snap = await getDocs(collection(db, "reports"));
+      const rows = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.at?.seconds || 0) - (a.at?.seconds || 0));
+      if (rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted);">No reports yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${escapeHtml(r.gameName || "—")}</td>
+          <td>${escapeHtml(r.note || "—")}</td>
+          <td>${r.at?.seconds ? new Date(r.at.seconds * 1000).toLocaleDateString() : "—"}</td>
+          <td class="actions">
+            <button class="btn btn-outline btn-sm" data-action="resolve-report" data-id="${r.id}">Mark Resolved</button>
+            <button class="btn btn-danger btn-sm" data-action="delete-report" data-id="${r.id}">Delete</button>
+          </td>
+        </tr>
+      `).join("");
+      tbody.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = btn.dataset.id;
+          const action = btn.dataset.action;
+          try {
+            if (action === "resolve-report") {
+              await updateDoc(doc(db, "reports", id), { status: "resolved" });
+              showToast("Marked as resolved.", "success");
+            } else if (action === "delete-report") {
+              await deleteDoc(doc(db, "reports", id));
+              showToast("Report deleted.", "success");
+            }
+            renderReportsTable();
+          } catch (err) {
+            console.error(err);
+            showToast("Firebase connection error.", "error");
+          }
+        });
+      });
+    } catch (err) {
+      console.error(err);
+      tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted);">Couldn't load reports.</td></tr>`;
+    }
+  }
+
+  // ---------- Activity Log ----------
+  async function renderActivityLog() {
+    const list = document.getElementById("activityLogList");
+    list.innerHTML = `<p style="color:var(--muted);">Loading…</p>`;
+    try {
+      const snap = await getDocs(collection(db, "activityLog"));
+      const rows = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (b.at?.seconds || 0) - (a.at?.seconds || 0))
+        .slice(0, 100);
+      if (rows.length === 0) {
+        list.innerHTML = `<p style="color:var(--muted);">No activity recorded yet.</p>`;
+        return;
+      }
+      list.innerHTML = rows.map(r => `
+        <div class="activity-item">
+          <strong>${escapeHtml(r.action)}</strong> — ${escapeHtml(r.details || "")}
+          <div class="act-time">${r.at?.seconds ? new Date(r.at.seconds * 1000).toLocaleString() : ""}</div>
+        </div>
+      `).join("");
+    } catch (err) {
+      console.error(err);
+      list.innerHTML = `<p style="color:var(--muted);">Couldn't load activity log.</p>`;
+    }
+  }
+
+  function randomKey() {
+    const seg = () => Math.random().toString(36).slice(2, 6).toUpperCase();
+    return `RR-${seg()}-${seg()}`;
+  }
+  document.getElementById("genKeysBtn")?.addEventListener("click", () => {
+    const inputs = [...productKeysGrid.querySelectorAll(".product-key-input")];
+    inputs.forEach(inp => { if (!inp.value.trim()) inp.value = randomKey(); });
+  });
+
+  document.getElementById("bulkGenKeysBtn")?.addEventListener("click", () => {
+    const qtyStr = prompt("How many product keys do you want to generate? (e.g. 100)", "100");
+    if (!qtyStr) return;
+    const qty = Math.max(1, Math.min(500, parseInt(qtyStr, 10) || 0));
+    if (!qty) { showToast("Enter a valid number.", "error"); return; }
+    const currentCount = productKeysGrid.querySelectorAll(".product-key-input").length;
+    const needed = currentCount + qty;
+    while (productKeysGrid.querySelectorAll(".product-key-input").length < needed) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = "Product Key";
+      input.className = "product-key-input";
+      input.style.cssText = "background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-family:var(--font-body);outline:none;";
+      input.dataset.used = "false";
+      productKeysGrid.appendChild(input);
+    }
+    const inputs = [...productKeysGrid.querySelectorAll(".product-key-input")];
+    let filled = 0;
+    for (const inp of inputs) {
+      if (filled >= qty) break;
+      if (!inp.value.trim()) { inp.value = randomKey(); filled++; }
+    }
+    showToast(`Generated ${filled} keys.`, "success");
+  });
+
+  let pendingDeleteId = null;
+  const deleteModal = document.getElementById("deleteModal");
+
+  function openDeleteModal(id) {
+    pendingDeleteId = id;
+    deleteModal.classList.add("show");
+  }
+  document.getElementById("cancelDeleteBtn").addEventListener("click", () => {
+    pendingDeleteId = null;
+    deleteModal.classList.remove("show");
+  });
+  document.getElementById("confirmDeleteBtn").addEventListener("click", async () => {
+    if (!pendingDeleteId) return;
+    try {
+      const deletedGame = allGamesAdmin.find(g => g.id === pendingDeleteId);
+      await deleteDoc(doc(db, "games", pendingDeleteId));
+      showToast("Game deleted.", "success");
+      logActivity("Delete game", deletedGame?.gameName || pendingDeleteId);
+      deleteModal.classList.remove("show");
+      pendingDeleteId = null;
+      await loadAllGamesAdminInner();
+      renderGamesTable();
+      renderStats();
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to delete game.", "error");
+    }
+  });
+
+  const gameForm = document.getElementById("gameForm");
+  const downloadLinksList = document.getElementById("downloadLinksList");
+  const productKeysGrid = document.getElementById("productKeysGrid");
+  const addGameTitle = document.getElementById("addGameTitle");
+
+  function resetGameForm() {
+    gameForm.reset();
+    document.getElementById("editGameId").value = "";
+    addGameTitle.textContent = "Add New Game";
+    downloadLinksList.innerHTML = "";
+    addDownloadRow();
+    buildKeyInputs();
+    clearFormErrors();
+    document.querySelector('input[name="accessType"][value="free"]').checked = true;
+    document.getElementById("keyExpiryHours").value = "";
+    document.getElementById("publishAt").value = "";
+    toggleKeysSection();
+  }
+
+  function toggleKeysSection() {
+    const accessType = document.querySelector('input[name="accessType"]:checked')?.value || "free";
+    const requireKey = document.getElementById("requireKeyToggle").value === "yes";
+    const keysPanel = productKeysGrid.closest(".form-section");
+    const priceRow = document.getElementById("gamePrice").closest(".form-row-2");
+    keysPanel.style.display = requireKey && accessType !== "coming-soon" ? "" : "none";
+    priceRow.style.display = accessType === "paid" ? "" : "none";
+  }
+  document.querySelectorAll('input[name="accessType"]').forEach(r => r.addEventListener("change", toggleKeysSection));
+  document.getElementById("requireKeyToggle").addEventListener("change", toggleKeysSection);
+
+  function addDownloadRow(data = { name: "", size: "", url: "" }) {
+    const row = document.createElement("div");
+    row.className = "dynamic-row";
+    row.innerHTML = `
+      <input type="text" class="dl-part-name" placeholder="Part name (e.g. Part 1)" value="${escapeHtml(data.name)}">
+      <input type="text" class="dl-part-size" placeholder="Size (e.g. 10 GB)" value="${escapeHtml(data.size)}">
+      <input type="text" class="dl-part-url" placeholder="Download URL" value="${escapeHtml(data.url)}">
+      <button type="button" class="remove-row-btn" title="Remove part">&times;</button>
+    `;
+    row.querySelector(".remove-row-btn").addEventListener("click", () => row.remove());
+    downloadLinksList.appendChild(row);
+  }
+  document.getElementById("addDownloadRowBtn").addEventListener("click", () => addDownloadRow());
+
+  function buildKeyInputs(existingKeys = []) {
+    productKeysGrid.innerHTML = "";
+    const slots = Math.max(10, existingKeys.length);
+    for (let i = 0; i < slots; i++) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = `Product Key ${i + 1}`;
+      input.className = "product-key-input";
+      input.style.cssText = "background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-family:var(--font-body);outline:none;";
+      input.value = existingKeys[i]?.key || "";
+      input.dataset.used = existingKeys[i]?.used ? "true" : "false";
+      productKeysGrid.appendChild(input);
+    }
+  }
+
+  function loadGameIntoForm(id) {
+    const g = allGamesAdmin.find(x => x.id === id);
+    if (!g) return;
+    document.getElementById("editGameId").value = id;
+    addGameTitle.textContent = `Edit ${g.gameName}`;
+
+    document.getElementById("gameName").value = g.gameName || "";
+    document.getElementById("gameAbout").value = g.about || "";
+    document.getElementById("gameThumb").value = g.thumbnail || "";
+    document.getElementById("gameSize").value = g.gameSize || "";
+
+    const accessType = g.accessType || "free";
+    document.querySelector(`input[name="accessType"][value="${accessType}"]`).checked = true;
+    document.getElementById("gamePrice").value = g.price ?? "";
+    document.getElementById("gameSalePrice").value = g.salePrice ?? "";
+    document.getElementById("gameCurrency").value = g.currency || "USD";
+    document.getElementById("requireKeyToggle").value = g.requireKey === false ? "no" : "yes";
+    document.getElementById("keyExpiryHours").value = g.keyExpiryHours || 12;
+    document.getElementById("publishAt").value = g.publishAt
+      ? new Date(g.publishAt - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+      : "";
+    document.getElementById("badgeFeatured").checked = !!g.badges?.featured;
+    document.getElementById("badgeTrending").checked = !!g.badges?.trending;
+    document.getElementById("badgeNew").checked = !!g.badges?.new;
+    document.getElementById("badgeHotDeal").checked = !!g.badges?.hotDeal;
+    toggleKeysSection();
+
+    const min = g.requirements?.minimum || {};
+    const rec = g.requirements?.recommended || {};
+    document.getElementById("minOS").value = min.os || "";
+    document.getElementById("minCPU").value = min.cpu || "";
+    document.getElementById("minRAM").value = min.ram || "";
+    document.getElementById("minGPU").value = min.gpu || "";
+    document.getElementById("minStorage").value = min.storage || "";
+    document.getElementById("recOS").value = rec.os || "";
+    document.getElementById("recCPU").value = rec.cpu || "";
+    document.getElementById("recRAM").value = rec.ram || "";
+    document.getElementById("recGPU").value = rec.gpu || "";
+    document.getElementById("recStorage").value = rec.storage || "";
+
+    downloadLinksList.innerHTML = "";
+    const links = g.downloadLinks || [];
+    if (links.length === 0) addDownloadRow();
+    else links.forEach(l => addDownloadRow(l));
+
+    buildKeyInputs(g.productKeys || []);
+    clearFormErrors();
+    switchView("add-game");
+  }
+
+  function clearFormErrors() {
+    gameForm.querySelectorAll(".invalid").forEach(el => el.classList.remove("invalid"));
+    gameForm.querySelectorAll(".form-error.show").forEach(el => el.classList.remove("show"));
+    document.getElementById("keysError").classList.remove("show");
+  }
+
+  function markInvalid(inputEl) {
+    inputEl.classList.add("invalid");
+    const err = inputEl.parentElement.querySelector(".form-error");
+    if (err) err.classList.add("show");
+  }
+
+  gameForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearFormErrors();
+
+    let valid = true;
+    const nameEl = document.getElementById("gameName");
+    const aboutEl = document.getElementById("gameAbout");
+    const thumbEl = document.getElementById("gameThumb");
+    const sizeEl = document.getElementById("gameSize");
+
+    if (!nameEl.value.trim()) { markInvalid(nameEl); valid = false; }
+    if (!aboutEl.value.trim()) { markInvalid(aboutEl); valid = false; }
+    if (!thumbEl.value.trim()) { markInvalid(thumbEl); valid = false; }
+    if (!sizeEl.value.trim()) { markInvalid(sizeEl); valid = false; }
+
+    const downloadLinks = [];
+    let downloadUrlError = false;
+    downloadLinksList.querySelectorAll(".dynamic-row").forEach(row => {
+      const name = row.querySelector(".dl-part-name").value.trim();
+      const size = row.querySelector(".dl-part-size").value.trim();
+      const url = row.querySelector(".dl-part-url").value.trim();
+      if (!name && !size && !url) return;
+      if (!isValidUrl(url)) {
+        downloadUrlError = true;
+        row.querySelector(".dl-part-url").classList.add("invalid");
+      }
+      downloadLinks.push({ name, size, url });
+    });
+    if (downloadUrlError) {
+      showToast("One or more download URLs are invalid.", "error");
+      valid = false;
+    }
+
+    const accessType = document.querySelector('input[name="accessType"]:checked')?.value || "free";
+    const requireKey = document.getElementById("requireKeyToggle").value === "yes" && accessType !== "coming-soon";
+
+    const keyInputs = [...productKeysGrid.querySelectorAll(".product-key-input")];
+    const enteredKeys = keyInputs
+      .map((inp) => ({ value: inp.value.trim(), used: inp.dataset.used === "true" }))
+      .filter(k => k.value !== "");
+
+    const upperValues = enteredKeys.map(k => k.value.toUpperCase());
+    const hasDuplicates = new Set(upperValues).size !== upperValues.length;
+    if (requireKey && hasDuplicates) {
+      document.getElementById("keysError").textContent = "Duplicate product keys are not allowed.";
+      document.getElementById("keysError").classList.add("show");
+      valid = false;
+    }
+    if (requireKey && enteredKeys.length === 0) {
+      document.getElementById("keysError").textContent = "Add at least one product key.";
+      document.getElementById("keysError").classList.add("show");
+      valid = false;
+    }
+    if (accessType === "paid" && !document.getElementById("gamePrice").value.trim()) {
+      markInvalid(document.getElementById("gamePrice"));
+      valid = false;
+    }
+
+    if (!valid) {
+      showToast("Please fix the highlighted fields.", "error");
+      return;
+    }
+
+    const productKeys = enteredKeys.map(k => ({ key: k.value, used: k.used }));
+    const priceVal = document.getElementById("gamePrice").value.trim();
+    const salePriceVal = document.getElementById("gameSalePrice").value.trim();
+
+    const gameData = {
+      gameName: nameEl.value.trim(),
+      about: aboutEl.value.trim(),
+      thumbnail: thumbEl.value.trim(),
+      gameSize: sizeEl.value.trim(),
+      accessType,
+      requireKey,
+      price: accessType === "paid" && priceVal ? Number(priceVal) : null,
+      salePrice: accessType === "paid" && salePriceVal ? Number(salePriceVal) : null,
+      currency: document.getElementById("gameCurrency").value,
+      keyExpiryHours: Number(document.getElementById("keyExpiryHours").value) || 12,
+      publishAt: document.getElementById("publishAt").value
+        ? new Date(document.getElementById("publishAt").value).getTime()
+        : null,
+      badges: {
+        featured: document.getElementById("badgeFeatured").checked,
+        trending: document.getElementById("badgeTrending").checked,
+        new: document.getElementById("badgeNew").checked,
+        hotDeal: document.getElementById("badgeHotDeal").checked,
+      },
+      requirements: {
+        minimum: {
+          os: document.getElementById("minOS").value.trim(),
+          cpu: document.getElementById("minCPU").value.trim(),
+          ram: document.getElementById("minRAM").value.trim(),
+          gpu: document.getElementById("minGPU").value.trim(),
+          storage: document.getElementById("minStorage").value.trim(),
+        },
+        recommended: {
+          os: document.getElementById("recOS").value.trim(),
+          cpu: document.getElementById("recCPU").value.trim(),
+          ram: document.getElementById("recRAM").value.trim(),
+          gpu: document.getElementById("recGPU").value.trim(),
+          storage: document.getElementById("recStorage").value.trim(),
+        }
+      },
+      downloadLinks,
+      productKeys
+    };
+
+    const editId = document.getElementById("editGameId").value;
+    const saveBtn = document.getElementById("saveGameBtn");
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+
+    try {
+      if (editId) {
+        await updateDoc(doc(db, "games", editId), gameData);
+        showToast("Game updated successfully.", "success");
+        logActivity("Edit game", gameData.gameName);
+      } else {
+        gameData.createdAt = serverTimestamp();
+        gameData.views = 0;
+        gameData.downloads = 0;
+        await addDoc(collection(db, "games"), gameData);
+        showToast("Game added successfully.", "success");
+        logActivity("Add game", gameData.gameName);
+      }
+      await loadAllGamesAdminInner();
+      switchView("games");
+    } catch (err) {
+      console.error(err);
+      showToast("Firebase connection error. Could not save game.", "error");
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Save Game";
+    }
+  });
+
+  window.resetGameFormAdmin = resetGameForm;
+
+  (async function initInner() {
+    resetGameForm();
+    await loadAllGamesAdminInner();
+    renderStats();
+  })();
+}
+
+// ============================================================
+// INITIAL ROUTE
+// ============================================================
+router();
+
+</script>
+</body>
+</html>
