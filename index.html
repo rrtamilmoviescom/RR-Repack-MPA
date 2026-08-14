@@ -1201,14 +1201,18 @@ td.actions { display: flex; gap: 8px; }
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </div>
       <h1>Admin Login</h1>
-      <p>Enter the admin password to manage RR Repack.</p>
+      <p>Sign in with your RR Repack admin account.</p>
       <form id="loginForm">
         <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
-          <div class="form-error" id="loginError">Incorrect password. Try again.</div>
+          <label for="adminEmail">Email</label>
+          <input type="email" id="adminEmail" placeholder="admin@example.com" autocomplete="username" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Log In</button>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+          <div class="form-error" id="loginError">Incorrect email or password, or this account is not an admin.</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="loginSubmitBtn">Log In</button>
       </form>
     </div>
   </div>
@@ -1491,6 +1495,9 @@ import {
   addDoc, updateDoc, deleteDoc, serverTimestamp, increment,
   query, orderBy, limit
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // ---------- Firebase config ----------
 const firebaseConfig = {
@@ -1504,6 +1511,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 // ---------- Shared utilities ----------
 function showToast(message, type = "info") {
@@ -1654,16 +1662,40 @@ async function logActivity(action, details = "") {
   }
 }
 
-const SESSION_KEY = "rr_repack_admin_session";
-// SECURITY WARNING: this client-side password check is NOT secure — anyone who
-// views the page source can read ADMIN_PASSWORD and bypass this gate entirely.
-// It only hides the admin UI from casual visitors; it does not protect your data,
-// since Firestore reads/writes below aren't actually gated by this check.
-// Before going live, replace this with Firebase Authentication (email/password
-// or similar) plus Firestore Security Rules that require an authenticated admin
-// UID for writes to `games` — see https://firebase.google.com/docs/auth and
-// https://firebase.google.com/docs/firestore/security/get-started
-const ADMIN_PASSWORD = "Pramitha Akka";
+// ============================================================
+// ADMIN AUTHENTICATION (Firebase Auth + Firestore admin allowlist)
+// ============================================================
+// Real security lives in two places, NOT in this client code:
+//   1. Firebase Authentication verifies the admin's email/password server-side.
+//   2. A Firestore doc at admins/{uid} marks that account as an admin.
+// Firestore Security Rules must independently require both — an authenticated
+// user AND a matching admins/{uid} doc — before allowing writes to games,
+// products keys, etc. This client-side check only controls what the UI shows;
+// the rules are what actually protect the data. See the security rules
+// reference this app expects near the bottom of this script block.
+let currentUser = null;   // Firebase Auth user object, or null
+let isAdminUser = false;  // true only after admins/{uid} lookup confirms it
+let authReady = false;    // becomes true once the first auth check resolves
+
+async function checkIsAdmin(uid) {
+  try {
+    const snap = await getDoc(doc(db, "admins", uid));
+    return snap.exists();
+  } catch (err) {
+    console.error("admin check failed", err);
+    return false;
+  }
+}
+
+const authReadyPromise = new Promise((resolve) => {
+  onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    isAdminUser = user ? await checkIsAdmin(user.uid) : false;
+    authReady = true;
+    resolve();
+    router();
+  });
+});
 
 // ============================================================
 // ROUTER
@@ -1706,9 +1738,24 @@ function showPage(name) {
 function router() {
   const { path, params } = parseRoute();
 
+  if (path === "/admin" || path === "/admin-login") {
+    if (!authReady) {
+      // Auth state hasn't resolved yet (e.g. page just loaded) — show a
+      // lightweight loading state and let the onAuthStateChanged callback
+      // re-run the router once it knows who's signed in.
+      showPage("admin-login");
+      const err = document.getElementById("loginError");
+      if (err) { err.textContent = "Checking session…"; err.classList.add("show"); }
+      return;
+    }
+  }
+
   if (path === "/admin") {
-    if (sessionStorage.getItem(SESSION_KEY) !== "true") {
+    if (!currentUser || !isAdminUser) {
       location.hash = "#/admin-login";
+      if (currentUser && !isAdminUser) {
+        showToast("This account doesn't have admin access.", "error");
+      }
       return;
     }
     showPage("admin");
@@ -1717,11 +1764,13 @@ function router() {
   }
 
   if (path === "/admin-login") {
-    if (sessionStorage.getItem(SESSION_KEY) === "true") {
+    if (currentUser && isAdminUser) {
       location.hash = "#/admin";
       return;
     }
     showPage("admin-login");
+    const err = document.getElementById("loginError");
+    if (err) err.classList.remove("show");
     return;
   }
 
@@ -2349,29 +2398,52 @@ function renderReviews(gameId, reviews) {
 // ADMIN LOGIN
 // ============================================================
 const loginForm = document.getElementById("loginForm");
+const adminEmailInput = document.getElementById("adminEmail");
 const passwordInput = document.getElementById("password");
 const loginError = document.getElementById("loginError");
+const loginSubmitBtn = document.getElementById("loginSubmitBtn");
 
-loginForm.addEventListener("submit", (e) => {
+loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const entered = passwordInput.value;
-  if (entered === ADMIN_PASSWORD) {
-    sessionStorage.setItem(SESSION_KEY, "true");
+  const email = adminEmailInput.value.trim();
+  const pwd = passwordInput.value;
+  loginError.classList.remove("show");
+  loginSubmitBtn.disabled = true;
+  loginSubmitBtn.textContent = "Signing in…";
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pwd);
+    const admin = await checkIsAdmin(cred.user.uid);
+    if (!admin) {
+      await signOut(auth);
+      loginError.textContent = "This account doesn't have admin access.";
+      loginError.classList.add("show");
+      passwordInput.value = "";
+      passwordInput.focus();
+      return;
+    }
     location.hash = "#/admin";
-  } else {
+  } catch (err) {
+    console.error("login failed", err);
+    loginError.textContent = "Incorrect email or password. Try again.";
     loginError.classList.add("show");
     passwordInput.classList.add("invalid");
     passwordInput.value = "";
     passwordInput.focus();
+  } finally {
+    loginSubmitBtn.disabled = false;
+    loginSubmitBtn.textContent = "Log In";
   }
 });
-passwordInput.addEventListener("input", () => {
+[adminEmailInput, passwordInput].forEach(el => el.addEventListener("input", () => {
   loginError.classList.remove("show");
   passwordInput.classList.remove("invalid");
-});
-navLogout.addEventListener("click", () => {
-  sessionStorage.removeItem(SESSION_KEY);
-  location.hash = "#/admin-login";
+}));
+navLogout.addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+  } finally {
+    location.hash = "#/admin-login";
+  }
 });
 
 // ============================================================
